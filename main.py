@@ -10,7 +10,12 @@ file.close()
 # opening script and output file
 file = open("rustscript.txt", "r")
 outputfile = open("main.rs", "a")
-outputfile.write("fn main() {\n")
+
+# current active variables
+active_variables = []
+
+# import statment occurence
+import_occurence = True
 
 # reading lines
 for line in file.readlines():
@@ -31,6 +36,11 @@ for line in file.readlines():
     # compiling key words and arguments
     if words[0] == "#":
         pass
+    elif words[0] == "from" and import_occurence:
+        outputfile.write(f"use {words[1]}::{words[3]};\n")
+    elif words[0] != "from" and import_occurence:
+        import_occurence = False
+        outputfile.write("fn main() {\n")
     elif words[0] == "print":
         variables = []
         variable_names = []
@@ -45,9 +55,13 @@ for line in file.readlines():
         else:
             outputfile.write(f"    println!({words[1]});\n")
     else:
-        outputfile.write(f"    let {' '.join(str(text) for text in words)};\n")
+        if words[0] in active_variables:
+            outputfile.write(f"    {' '.join(str(text) for text in words)};\n")
+        else:
+            outputfile.write(f"    let mut {' '.join(str(text) for text in words)};\n")
+            active_variables.append(words[0])
 
-outputfile.write("}")
+outputfile.write("}\n")
 
 # closing all opened files
 outputfile.close()

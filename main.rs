@@ -1,8 +1,10 @@
+use std::io;
 fn main() {
     println!("hello world");
-    let x = 9;
+    let mut x = 9;
     println!("no");
-    let y = 90;
+    let mut y = 90;
     println!("{}", x);
-    let y = y + 90;
+    y += 90;
+    println!("{}", y);
 }

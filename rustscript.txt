@@ -1,7 +1,10 @@
 # add " " or ";" at end of each line
+from std import io 
+l = 39 
 print("hello world") 
 x = 9 
 print("no") 
 y = 90 
 print("{x}") 
-y = y + 90 
+y += 90 
+print("{y}")
