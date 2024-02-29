@@ -1,0 +1,7 @@
+# add " " or ";" at end of each line
+print("hello world") 
+x = 9 
+print("no") 
+y = 90 
+print("{x}") 
+y = y + 90 
