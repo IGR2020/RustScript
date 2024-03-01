@@ -1,5 +1,6 @@
 def remove_char_at_index(s: str, index: int) -> str:
-    return s[:index] + s[index + 1:]
+    return s[:index] + s[index + 1 :]
+
 
 # clearing output file and fmtScript file
 file = open("main.rs", "w")
@@ -17,6 +18,10 @@ active_variables = []
 # import statment occurence
 import_occurence = True
 
+# indentaton counter and counts
+indent_count = 1
+indent_value = 4
+
 # reading lines
 for line in file.readlines():
 
@@ -32,15 +37,32 @@ for line in file.readlines():
             current_word = ""
         else:
             current_word += text
-    
+
     # compiling key words and arguments
-    if words[0] == "#":
+    if len(words) == 0:
+        if import_occurence:
+            import_occurence = False
+            outputfile.write("\nfn main() {\n")
+    elif words[0] == "":
+        if import_occurence:
+            import_occurence = False
+            outputfile.write("\nfn main() {\n")
+    elif words[0] == "#":
         pass
     elif words[0] == "from" and import_occurence:
         outputfile.write(f"use {words[1]}::{words[3]};\n")
     elif words[0] != "from" and import_occurence:
         import_occurence = False
         outputfile.write("fn main() {\n")
+    elif words[0] == "if":
+        outputfile.write(
+            " " * (indent_count * indent_value)
+            + f"{' '.join(str(word) for word in words)}\n"
+        )
+        indent_count += 1
+    elif words[0] == "}":
+        outputfile.write(" " * ((indent_count-1) * indent_value) + "}\n")
+        indent_count -= 1
     elif words[0] == "print":
         variables = []
         variable_names = []
@@ -51,14 +73,25 @@ for line in file.readlines():
         for var in variables:
             words[1] = remove_char_at_index(words[1], var)
         if len(variables) > 0:
-            outputfile.write(f"    println!({words[1]}, {', '.join(str(var) for var in variable_names)});\n")
+            outputfile.write(
+                " " * (indent_count * indent_value)
+                + f"println!({words[1]}, {', '.join(str(var) for var in variable_names)});\n"
+            )
         else:
-            outputfile.write(f"    println!({words[1]});\n")
+            outputfile.write(
+                " " * (indent_count * indent_value) + f"println!({words[1]});\n"
+            )
     else:
         if words[0] in active_variables:
-            outputfile.write(f"    {' '.join(str(text) for text in words)};\n")
+            outputfile.write(
+                " " * (indent_count * indent_value)
+                + f"{' '.join(str(word) for word in words)};\n"
+            )
         else:
-            outputfile.write(f"    let mut {' '.join(str(text) for text in words)};\n")
+            outputfile.write(
+                " " * (indent_count * indent_value)
+                + f"let mut {' '.join(str(word) for word in words)};\n"
+            )
             active_variables.append(words[0])
 
 outputfile.write("}\n")

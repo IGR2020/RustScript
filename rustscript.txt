@@ -1,5 +1,7 @@
-# add " " or ";" at end of each line
+# add " " or ";" at end of each line and seperate imports from main line by one blank line
+# also keep all imports at the top
 from std import io 
+
 l = 39 
 print("hello world") 
 x = 9 
@@ -8,3 +10,10 @@ y = 90
 print("{x}") 
 y += 90 
 print("{y}")
+if y > x { 
+print("y better") 
+print("p") 
+if y > x { 
+print("r") 
+} 
+} 
